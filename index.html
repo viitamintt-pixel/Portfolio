@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PORTFOLIO — Phiyawan Buakham</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#1D2B53;
+    --sky-bot:#29ADFF;
+    --cloud:#FFF1E8;
+    --sun:#FFEC27;
+    --grass:#00E436;
+    --grass-dark:#008751;
+    --dirt:#AB5236;
+    --dirt-dark:#7a3c22;
+    --ink:#1D2B53;
+    --white:#FFF1E8;
+    --pink:#FF77A8;
+    --red:#FF004D;
+    --orange:#FFA300;
+    --purple:#7E2553;
+    --gray:#5F574F;
+    --lgray:#C2C3C7;
+    --skin:#FFCCAA;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; }
+
+  body{
+    background:var(--sky-bot);
+    color:var(--white);
+    font-family:'VT323', monospace;
+    font-size:22px;
+    overflow:hidden;
+  }
+
+  .pixel{ font-family:'Press Start 2P', cursive; }
+  ::selection{ background:var(--pink); color:var(--ink); }
+  a{ color:inherit; }
+  button{ font-family:inherit; }
+  :focus-visible{ outline:3px solid var(--pink); outline-offset:3px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  /* ================= BACKGROUND SCENE (fixed, never changes) ================= */
+  .bg-scene{
+    position:fixed; inset:0;
+    z-index:0;
+    overflow:hidden;
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 55%, var(--sky-bot) 100%);
+  }
+  .stars{ position:absolute; inset:0; top:0; height:45%; }
+  .stars::before{
+    content:"";
+    position:absolute; top:0; left:0; width:2px; height:2px;
+    background:var(--white);
+    box-shadow:
+      8vw 5vh 0 0 var(--white),
+      22vw 3vh 0 0 var(--white),
+      35vw 9vh 0 0 var(--lgray),
+      50vw 4vh 0 0 var(--white),
+      63vw 7vh 0 0 var(--lgray),
+      78vw 2vh 0 0 var(--white),
+      88vw 6vh 0 0 var(--white),
+      12vw 14vh 0 0 var(--lgray),
+      45vw 15vh 0 0 var(--white),
+      70vw 13vh 0 0 var(--lgray),
+      5vw 20vh 0 0 var(--white),
+      95vw 18vh 0 0 var(--lgray),
+      30vw 22vh 0 0 var(--white),
+      58vw 24vh 0 0 var(--lgray);
+    animation:twinkle 2.4s steps(2) infinite;
+  }
+  @keyframes twinkle{ 0%,100%{ opacity:1; } 50%{ opacity:0.35; } }
+
+  .sun{
+    position:absolute; top:9%; right:13%;
+    width:8px; height:8px;
+    background:transparent;
+    animation:sun-flicker 3s steps(2) infinite;
+  }
+  .sun::before{
+    content:"";
+    position:absolute; top:0; left:0; width:8px; height:8px;
+    background:var(--sun);
+    box-shadow:
+      -8px -8px 0 0 var(--sun),
+      0 -8px 0 0 var(--sun),
+      8px -8px 0 0 var(--sun),
+      -8px 0 0 0 var(--sun),
+      8px 0 0 0 var(--sun),
+      -8px 8px 0 0 var(--sun),
+      0 8px 0 0 var(--sun),
+      8px 8px 0 0 var(--orange),
+      0 -16px 0 0 var(--sun),
+      0 16px 0 0 var(--sun),
+      -16px 0 0 0 var(--sun),
+      16px 0 0 0 var(--sun);
+  }
+  @keyframes sun-flicker{ 0%,100%{ opacity:1; } 50%{ opacity:0.88; } }
+
+  .cloud{
+    position:absolute;
+    background:var(--cloud);
+    box-shadow:
+      16px -8px 0 0 var(--cloud),
+      -16px -8px 0 0 var(--cloud),
+      32px 0 0 0 var(--cloud),
+      -32px 0 0 0 var(--cloud);
+  }
+  .cloud-1{ top:14%; left:-10%; width:40px; height:20px; animation:drift 40s linear infinite; }
+  .cloud-2{ top:22%; left:-10%; width:32px; height:16px; animation:drift 55s linear infinite; animation-delay:-20s; }
+  .cloud-3{ top:9%; left:-10%; width:24px; height:14px; animation:drift 30s linear infinite; animation-delay:-8s; }
+  @keyframes drift{ from{ transform:translateX(-10vw); } to{ transform:translateX(110vw); } }
+
+  .mountains{
+    position:absolute; bottom:22%; left:0; width:100%; height:16%;
+    background:var(--purple);
+    clip-path:polygon(
+      0% 100%, 0% 60%, 8% 20%, 16% 55%, 24% 10%, 33% 50%, 42% 25%,
+      50% 60%, 58% 15%, 67% 45%, 75% 5%, 83% 40%, 91% 20%, 100% 55%, 100% 100%
+    );
+    opacity:0.9;
+  }
+
+  .ground{
+    position:absolute; bottom:0; left:0; width:100%; height:22%;
+    background:var(--dirt);
+    border-top:8px solid var(--grass);
+    box-shadow: inset 0 -100px 0 -80px var(--dirt-dark);
+  }
+  .ground::before{
+    content:"";
+    position:absolute; top:-8px; left:0; width:100%; height:8px;
+    background:repeating-linear-gradient(90deg, var(--grass) 0 16px, var(--grass-dark) 16px 24px);
+  }
+  .ground::after{
+    content:"";
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background-image:repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 4px, transparent 4px 32px);
+  }
+
+  .bush{
+    position:absolute; bottom:20%;
+    width:36px; height:18px;
+    background:var(--grass-dark);
+    box-shadow: 12px -6px 0 0 var(--grass-dark), -12px -6px 0 0 var(--grass-dark), 0 -10px 0 0 var(--grass-dark);
+  }
+  .bush-1{ left:6%; }
+  .bush-2{ left:38%; }
+  .bush-3{ left:70%; }
+  .bush-4{ left:88%; }
+
+  .block{
+    position:absolute;
+    width:34px; height:34px;
+    background:var(--orange);
+    border:3px solid var(--ink);
+    box-shadow: inset 0 0 0 3px rgba(255,241,232,0.5);
+  }
+  .block::after{
+    content:"?";
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Press Start 2P', cursive; font-size:12px; color:var(--ink);
+  }
+  .block-1{ left:14%; bottom:34%; animation:hover1 3s ease-in-out infinite; }
+  .block-2{ left:78%; bottom:44%; animation:hover1 3.4s ease-in-out infinite; animation-delay:-1s; }
+  @keyframes hover1{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+
+  /* ================= CRT SCREEN OVERLAY ================= */
+  .crt-overlay{
+    position:fixed; inset:0; z-index:50; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode:multiply;
+  }
+  .vignette{
+    position:fixed; inset:0; z-index:51; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.4) 100%);
+  }
+
+  /* ================= SCROLL CONTAINER ================= */
+  .scroll-container{
+    position:relative; z-index:1;
+    height:100vh; height:100svh;
+    overflow-y:auto;
+    scroll-snap-type:y mandatory;
+    scrollbar-width:none;
+  }
+  .scroll-container::-webkit-scrollbar{ display:none; }
+
+  .page{
+    position:relative;
+    height:100vh; height:100svh;
+    scroll-snap-align:start;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:6vh 6vw;
+    text-align:center;
+  }
+
+  /* ---- HUD nav dots ---- */
+  .hud-dots{
+    position:fixed; z-index:10;
+    right:22px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .hud-dots button{
+    width:14px; height:14px;
+    background:transparent;
+    border:2px solid var(--white);
+    cursor:pointer;
+    transition:background 0.2s, transform 0.2s;
+  }
+  .hud-dots button.active{ background:var(--pink); border-color:var(--pink); transform:scale(1.3); }
+  @media (max-width:700px){ .hud-dots{ right:10px; } }
+
+  /* ================= HERO ================= */
+  #hero{ cursor:pointer; }
+  .hero-title{
+    font-size:clamp(2.6rem, 12vw, 7rem);
+    color:var(--white);
+    text-shadow:
+      4px 4px 0 var(--red),
+      8px 8px 0 var(--ink);
+    letter-spacing:0.03em;
+    line-height:1.1;
+  }
+  .hero-name{
+    margin-top:26px;
+    font-size:clamp(1rem, 3.2vw, 1.6rem);
+    color:var(--sun);
+    text-shadow:3px 3px 0 var(--ink);
+    letter-spacing:0.06em;
+  }
+  .hero-blink{
+    position:absolute; bottom:6vh; left:0; right:0;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    font-family:'Press Start 2P', cursive;
+    font-size:0.75rem;
+    color:var(--white);
+    animation:blink 1.4s steps(1) infinite;
+  }
+  @keyframes blink{ 0%,49%{ opacity:1; } 50%,100%{ opacity:0.15; } }
+  .hero-arrow{
+    width:4px; height:4px;
+    background:var(--white);
+    box-shadow:
+      -4px -4px 0 0 var(--white),
+      0 -4px 0 0 var(--white),
+      4px -4px 0 0 var(--white),
+      -8px -8px 0 0 var(--white),
+      -4px -8px 0 0 var(--white),
+      0 -8px 0 0 var(--white),
+      4px -8px 0 0 var(--white),
+      8px -8px 0 0 var(--white);
+    animation:arrowbob 1.2s steps(2) infinite;
+  }
+  @keyframes arrowbob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(8px); } }
+
+  /* ================= VIDEO PAGES ================= */
+  .content-page{ align-items:center; }
+  .content-inner{ width:min(1200px, 94vw); }
+  .page-title{
+    font-family:'Press Start 2P', cursive;
+    font-size:clamp(1.3rem, 4vw, 2.2rem);
+    color:var(--white);
+    text-shadow:4px 4px 0 var(--ink);
+    margin-bottom:32px;
+  }
+
+  .video-single{
+    width:min(1150px, 92vw);
+    margin:0 auto;
+    border:5px solid var(--white);
+    box-shadow:0 0 0 5px var(--ink), 0 14px 0 0 rgba(0,0,0,0.35);
+    background:var(--ink);
+    overflow:hidden;
+  }
+  .video-single iframe{
+    width:100%; aspect-ratio:16/9; display:block; border:none;
+  }
+  .video-single .clip-label{
+    padding:14px 18px;
+    font-family:'Press Start 2P', cursive;
+    font-size:0.85rem;
+    color:var(--white);
+    background:var(--purple);
+    letter-spacing:0.04em;
+  }
+
+  @media (max-width:760px){
+    body{ font-size:19px; }
+    .video-single .clip-label{ font-size:0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-scene">
+  <div class="stars"></div>
+  <div class="sun"></div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+  <div class="mountains"></div>
+  <div class="block block-1"></div>
+  <div class="block block-2"></div>
+  <div class="ground"></div>
+  <div class="bush bush-1"></div>
+  <div class="bush bush-2"></div>
+  <div class="bush bush-3"></div>
+  <div class="bush bush-4"></div>
+</div>
+
+<div class="crt-overlay"></div>
+<div class="vignette"></div>
+
+<div class="hud-dots" aria-hidden="true">
+  <button data-target="hero" class="active" aria-label="หน้าแรก"></button>
+  <button data-target="video-1" aria-label="Dutchie Yogurt"></button>
+  <button data-target="video-2" aria-label="Fruzzy Brush"></button>
+  <button data-target="video-3" aria-label="ของดีบ้านเรา"></button>
+</div>
+
+<div class="scroll-container" id="scrollContainer">
+
+  <!-- HERO -->
+  <section class="page" id="hero">
+    <h1 class="pixel hero-title">PORTFOLIO</h1>
+    <div class="hero-name pixel">Phiyawan Buakham</div>
+    <div class="hero-blink">
+      <span>TAP เพื่อไปหน้าถัดไป</span>
+      <span class="hero-arrow"></span>
+    </div>
+  </section>
+
+  <!-- VIDEO 1 -->
+  <section class="page content-page" id="video-1">
+    <div class="content-inner">
+      <h2 class="page-title pixel">Production</h2>
+      <div class="video-single">
+        <iframe src="https://drive.google.com/file/d/1p8S5VhFWTkQUncfU04ao3Q_vla0L9p9G/preview" allow="autoplay" allowfullscreen title="Dutchie Yogurt"></iframe>
+        <div class="clip-label">DUTCHIE YOGURT</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO 2 -->
+  <section class="page content-page" id="video-2">
+    <div class="content-inner">
+      <h2 class="page-title pixel">Production</h2>
+      <div class="video-single">
+        <iframe src="https://drive.google.com/file/d/1NTM_37ETPUMfguyaxo9zapHnOAmd2r7-/preview" allow="autoplay" allowfullscreen title="Fruzzy Brush"></iframe>
+        <div class="clip-label">FRUZZY BRUSH</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO 3 -->
+  <section class="page content-page" id="video-3">
+    <div class="content-inner">
+      <h2 class="page-title pixel">Production</h2>
+      <div class="video-single">
+        <iframe src="https://drive.google.com/file/d/1CxFn_-UHMI9PZe6D0cXzf_eTvYLR81ng/preview" allow="autoplay" allowfullscreen title="ของดีบ้านเรา"></iframe>
+        <div class="clip-label">ของดีบ้านเรา</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  const pages = ['hero','video-1','video-2','video-3'];
+  const dots = document.querySelectorAll('.hud-dots button');
+
+  function goTo(id){
+    document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  }
+
+  // hero tap to advance
+  document.getElementById('hero').addEventListener('click', () => goTo('video-1'));
+
+  // nav dots
+  dots.forEach(d => d.addEventListener('click', () => goTo(d.dataset.target)));
+
+  // active dot tracking
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        dots.forEach(d => d.classList.toggle('active', d.dataset.target === entry.target.id));
+      }
+    });
+  }, { threshold:0.6 });
+  pages.forEach(id => io.observe(document.getElementById(id)));
+})();
+</script>
+
+</body>
+</html>
